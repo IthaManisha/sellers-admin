@@ -1,23 +1,41 @@
-import logo from './logo.svg';
+import React,{useState} from 'react';
 import './App.css';
+import AddProduct from './components/AddProduct';
+import NewProduct from './components/NewProduct';
+import Card from './components/UI/Card';
 
 function App() {
+  //const[productList,setProductList]=useState([]);
+  const storedProductList = JSON.parse(localStorage.getItem('productList')) || [];
+  const [productList, setProductList] = useState(storedProductList);
+
+
+  const addProductHandler=(data)=>{
+    const updatedProductList = [...productList, data];
+    /*setProductList(()=>{
+      return[...productList,data];
+    })*/
+    setProductList(updatedProductList);
+    setProductList(updatedProductList);
+    localStorage.setItem('productList', JSON.stringify(updatedProductList));
+    
+  }
+  const deleteProduct = id => {
+   /* setProductList(prevProducts=> {
+      const updatedProducts = prevProducts.filter(product => product.id !== id);
+      return updatedProducts;
+    });*/
+    const updatedProducts = productList.filter((product) => product.id !== id);
+    setProductList(updatedProducts);
+    localStorage.setItem('productList', JSON.stringify(updatedProducts));
+    
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Card>
+      <AddProduct onSaveData={addProductHandler} />
+      <NewProduct products={productList} onDeleteProduct={deleteProduct}/>
+      </Card>
     </div>
   );
 }
